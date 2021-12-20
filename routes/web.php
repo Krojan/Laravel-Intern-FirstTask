@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('index');
 });
+Route::get('/landing', 'PostController@index')->name('landing');
 
 Route::middleware(['guest'])->group(function () {
     Route::get('/register',[\App\Http\Controllers\UserController::class, 'create']);

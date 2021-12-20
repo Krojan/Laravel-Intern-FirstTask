@@ -28,7 +28,7 @@
 
             @if(isset($product->image_name))
                 <td>
-                    <img src="{{asset('/images/'.$product->image_name)}}" alt="image" height="100px" width="100px">
+                    <img src="{{asset('images/'.$product->image_name)}}" alt="image" height="100px" width="100px">
                 </td>
             @endif
 
