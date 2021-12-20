@@ -6,6 +6,13 @@ Route::get('/', function () {
     return view('index');
 });
 Route::get('/landing', 'PostController@index')->name('landing');
+Route::group(['prefix'=>'dashboard', 'middleware'=>'auth'],function(){
+    Route::get('/home', "PostController@dashboard")->name('dashboard');
+    Route::get('/user/list', "PostController@list")->name('dashboard_user_list');
+//    Route::post('/user/add', 'UserController@store')->name('dashboard_user_add');
+    //dashboard_user_edit,dashboard_user_delete, dashboard_user_add
+});
+
 
 Route::middleware(['guest'])->group(function () {
     Route::get('/register',[\App\Http\Controllers\UserController::class, 'create']);
@@ -21,6 +28,7 @@ Route::get('/logout', 'UserController@logoutUser')->name('logout');
 Route::group(['prefix' => 'user',  'middleware' => 'auth'], function() {
     Route::get('/list', 'UserController@list')->name('user_list');
     Route::get('/profile', 'UserController@profile')->name('profile');
+    Route::post('/create', 'UserController@store')->name('user_store');
     Route::get('/edit/{id}', 'UserController@edit')->name('user_edit');
     Route::post('/update/{id}', 'UserController@update')->name('user_update');
     Route::get('/delete/{id}', 'UserController@delete')->name('user_delete');

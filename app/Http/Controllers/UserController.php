@@ -11,17 +11,30 @@ class UserController extends Controller
         return view('register_user');
     }
 
-    public function store(){
-
-        $details=request()->validate([
+    public function store(Request $request){
+//        dd( $request->only(['name', 'email', 'password']));
+        $details=$request->validate([
             'name'=>'required',
             'email'=>'required',
             'password'=>'required | min: 8 | max: 20'
         ]);
-//        $details['password']=bcrypt(\request()->get('password'));
-        $user=User::create($details);
-        auth()->login($user);
-        return 'new user register and logged';
+//        dd($request->hasFile('image'));
+        $user=User::create($request->only(['name', 'email', 'password']));
+        if($request->hasFile('image')){
+            if(
+                $request->validate([
+                'image'=>'mimes:jpeg, png'
+                ])
+            ){
+                $image_name=uniqid(). '.' .$request->file('image')->getClientOriginalExtension();
+                $request->file('image')->move(public_path('images'), $image_name);
+                $user->image_name=$image_name;
+                $user->save();
+            }
+
+        }
+        return redirect()->back()->with('success',  "new user added");
+//        return 'new user register and logged';
     }
 
     public function list(){
@@ -79,10 +92,22 @@ class UserController extends Controller
         }
         else{
             User::find($id)->delete();
-            return redirect('/')->with('success', "delete success");
+            return redirect()->back()->with('success', "delete success");
         }
 
     }
+
+    //dashboard_user_add
+//    public function store(Request $request){
+//        $atrributes=$request->validate([
+//            'name'=>'required|max:255|min:5',
+//            'email'=>'required|email',
+//            'password'=>'required|mim:6'
+//        ]);
+//        User::create($atrributes);
+//
+//    }
+//
 
 }
 

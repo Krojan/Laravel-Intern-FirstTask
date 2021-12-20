@@ -21,4 +21,11 @@ class PostController extends Controller
             ->with('product_count', Product::all()->count())
             ->with('categories_count', $categories->count());
     }
+    public function dashboard(){
+        return view ('dashboard.index');
+    }
+    public function list(){
+        $users=User::all();
+        return view('dashboard.user_list', compact('users'));
+    }
 }
